@@ -17,3 +17,8 @@ A file containing all the integers in the input file but sorted.
 **Constraints**
 
 JVM has only 100 MB of heap size.
+
+
+**How to run**
+`mvn clean package`
+`java -Xmx10m -jar target\saleshero-challenge-1.0-SNAPSHOT-jar-with-dependencies.jar input\30MB.txt`
