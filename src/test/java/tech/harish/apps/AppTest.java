@@ -24,8 +24,8 @@ public class AppTest {
     @Test
     public void shouldMergeNonOverlappingFiles() {
         try {
-            Collection<File> files = FileUtils.listFiles(new File("input" + File.separator + "test_no_overlap"), new String[]{".txt"}, false);
-            File outputFile = new File("output" + File.separator + "test_no_overlap");
+            Collection<File> files = FileUtils.listFiles(new File("input" + File.separator + "test_no_overlap"), new String[]{"txt"}, false);
+            File outputFile = new File("test_no_overlap_output.txt");
             app.mergeInOrder(new ArrayList(files), outputFile);
 
             assertTrue(outputFile.exists());

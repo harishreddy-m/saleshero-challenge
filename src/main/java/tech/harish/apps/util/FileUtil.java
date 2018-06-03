@@ -4,11 +4,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /*
  * Responsible for breaking files
@@ -28,14 +29,6 @@ public class FileUtil {
 
     private long sizeOfTemporaryFile = 0; //in bytes
 
-    public static Optional<Integer> getFirstInteger(File file) throws FileNotFoundException {
-        try (Scanner sc = new Scanner(file, Charset.defaultCharset().name())) {
-            if (sc.hasNextLine()) {
-                return Optional.of(Integer.parseInt(sc.nextLine()));
-            }
-        }
-        return Optional.empty();
-    }
 
     public List<File> breakLargeFile(File file) throws IOException {
 
@@ -70,6 +63,10 @@ public class FileUtil {
         Arrays.sort(unsorted);
         for (int i = 0; i <= unsorted.length; i++) {
             String sortedInteger = (unsorted[i] + System.lineSeparator());
+            /** TODO : writing one by one is very slow. Some kind of batching should be applied.
+             * But the attempts of using stringbuilder and writing multiple numbers at a time failed with Heap Space Error.
+             *  As the array is already completely filling the heap space, there is no much left for string buffers
+             * */
             FileUtils.write(fileTowrite, sortedInteger, Charset.defaultCharset(), true);
         }
         System.out.println("Actual file size on disk : " + FileUtils.sizeOf(fileTowrite));
