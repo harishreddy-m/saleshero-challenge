@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class FileUtil {
 
-    static final String TMP_FILE = "tmp" + File.separator + "smallFile";
+    private static final String TMP_FILE = "tmp" + File.separator + "smallFile";
 
     public FileUtil() {
         //init
@@ -30,7 +30,7 @@ public class FileUtil {
     private long sizeOfTemporaryFile = 0; //in bytes
 
 
-    public List<File> breakLargeFile(File file) throws IOException {
+    public List<File> breakLargeFile(File file) {
 
         sizeOfTemporaryFile = calculateFreeMemory();
         System.out.println("Maximum Size of temporary file can be : " + sizeOfTemporaryFile);
@@ -53,7 +53,6 @@ public class FileUtil {
             sortAndWriteToFile(unsorted);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
         }
         return temporaryFiles;
     }
@@ -61,28 +60,28 @@ public class FileUtil {
     private void sortAndWriteToFile(int[] unsorted) throws IOException {
         proceedToNextFile();
         Arrays.sort(unsorted);
-        for (int i = 0; i <= unsorted.length; i++) {
-            String sortedInteger = (unsorted[i] + System.lineSeparator());
-            /** TODO : writing one by one is very slow. Some kind of batching should be applied.
-             * But the attempts of using stringbuilder and writing multiple numbers at a time failed with Heap Space Error.
-             *  As the array is already completely filling the heap space, there is no much left for string buffers
-             * */
+        for (int anUnsorted : unsorted) {
+            String sortedInteger = (anUnsorted + System.lineSeparator());
+            /* TODO : writing one by one is very slow. Some kind of batching should be applied.
+              But the attempts of using stringbuilder and writing multiple numbers at a time failed with Heap Space Error.
+               As the array is already completely filling the heap space, there is no much left for string buffers
+              */
             FileUtils.write(fileTowrite, sortedInteger, Charset.defaultCharset(), true);
         }
         System.out.println("Actual file size on disk : " + FileUtils.sizeOf(fileTowrite));
         System.out.println("Free memory now : " + calculateFreeMemory());
     }
 
-    static void cleanTmp() throws IOException {
+    private static void cleanTmp() throws IOException {
         File toDelete = new File("tmp");
         FileUtils.deleteDirectory(toDelete);
         toDelete = new File("sorted_tmp");
         FileUtils.deleteDirectory(toDelete);
     }
 
-    File fileTowrite;
-    int fileIndex;
-    List<File> temporaryFiles = new ArrayList<>();
+    private File fileTowrite;
+    private int fileIndex;
+    private List<File> temporaryFiles = new ArrayList<>();
 
     private void proceedToNextFile() throws IOException {
         String tmpFileName = TMP_FILE + (fileIndex++) + ".txt";

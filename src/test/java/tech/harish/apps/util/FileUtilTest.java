@@ -18,7 +18,7 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 @PrepareForTest(FileUtil.class)
 public class FileUtilTest {
     static final String TEST_FILE_1 = "input" + File.separator + "test_12KB.txt";
-    private static final String TEST_FILE_2 = "input" + File.separator + "30MB.txt";
+    private static final String TEST_FILE_2 = "input" + File.separator + "test_10MB.txt";
     private FileUtil fileUtil;
 
 
@@ -31,22 +31,11 @@ public class FileUtilTest {
 
 
     @Test
-    public void shouldReadFile() throws Exception {
+    public void shouldSplitFile() throws Exception {
         doReturn(1024L).when(fileUtil, "calculateFreeMemory");
         List<File> result = fileUtil.breakLargeFile(new File(TEST_FILE_1));
         Assert.assertNotNull("list must not be null", result);
-        Assert.assertEquals(1, result.size());
+        Assert.assertTrue(result.size() > 1);
     }
-
-
-    @Test
-    public void shouldSplitFile() throws Exception {
-        List<File> result = fileUtil.breakLargeFile(new File(TEST_FILE_2));
-        Assert.assertNotNull("list must not be null", result);
-        //when 2 MB is free memory and 10 MB is file size
-        // 5 files must be created
-        Assert.assertEquals(5, result.size());
-    }
-
 
 }
